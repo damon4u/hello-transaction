@@ -4,7 +4,7 @@
 <mapper namespace="com.damon4u.demo.dao.UserMapper">
 
     <select id="findByUserName" resultType="com.damon4u.demo.domain.User">
-        select id ,user_name
+        select id ,user_name, remark
         from user
         <where>
             <if test="userName != null">

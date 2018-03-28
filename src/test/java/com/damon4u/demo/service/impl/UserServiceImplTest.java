@@ -6,6 +6,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.jdbc.BadSqlGrammarException;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
@@ -29,14 +30,32 @@ public class UserServiceImplTest {
 
     @Test
     public void save() {
-        User user = new User();
-        user.setUserName("a");
+        User user = new User("alice", "save");
         userService.save(user);
     }
 
+    /**
+     * 由于默认走的从库，如果试图对从库进行写操作，那么会抛权限异常
+     */
+    @Test(expected = BadSqlGrammarException.class)
+    public void saveUseDefaultDataSource() {
+        User user = new User("alice", "save to slave error");
+        userService.saveUseDefaultDataSource(user);
+    }
+
+    /**
+     * 普通的读操作，走默认的从库
+     */
     @Test
     public void getUserById() {
         User user = userService.getUserById(1L);
         logger.info("user={}", user);
+    }
+
+
+    @Test(expected = BadSqlGrammarException.class)
+    public void readAndWrite() {
+        User user = new User("bob", "readAndWrite");
+        userService.readAndWrite(user);
     }
 }

@@ -20,11 +20,11 @@ import java.util.List;
 @Repository
 public interface UserMapper {
 
-    @Insert("insert into user(user_name) values (#{userName})")
+    @Insert("insert into user(user_name, remark) values (#{userName}, #{remark})")
     @Options(useGeneratedKeys=true)
     int insert(User user);
 
-    @Select("select id,user_name from user where id=#{id}")
+    @Select("select id,user_name,remark from user where id=#{id}")
     User findById(@Param("id") Long id);
 
     List<User> findByUserName(@Param("userName") String userName);

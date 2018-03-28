@@ -12,5 +12,9 @@ public interface UserService {
 
     void save(User user);
 
+    void saveUseDefaultDataSource(User user);
+
     User getUserById(Long id);
+
+    void readAndWrite(User user);
 }

@@ -12,6 +12,8 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import javax.annotation.Resource;
 
+import java.io.IOException;
+
 import static org.junit.Assert.*;
 
 /**
@@ -54,8 +56,65 @@ public class UserServiceImplTest {
 
 
     @Test(expected = BadSqlGrammarException.class)
-    public void readAndWrite() {
-        User user = new User("bob", "readAndWrite");
-        userService.readAndWrite(user);
+    public void readAndWriteDefaultDataSource() {
+        User user = new User("bob", "readAndWriteDefaultDataSource");
+        userService.readAndWriteDefaultDataSource(user);
+    }
+
+    @Test
+    public void readAndWriteWithSelfIoC() {
+        User user = new User("bob", "readAndWriteWithSelfIoC");
+        userService.readAndWriteWithSelfIoC(user);
+    }
+
+    @Test(expected = BadSqlGrammarException.class)
+    public void readAndWriteWithTransaction() {
+        User user = new User("catalina", "readAndWriteWithTransaction");
+        userService.readAndWriteWithTransaction(user);
+    }
+
+    @Test
+    public void readAndWriteWithTransactionUseMaster() {
+        User user = new User("catalina", "readAndWriteWithTransactionUseMaster");
+        userService.readAndWriteWithTransactionUseMaster(user);
+    }
+
+    /**
+     * 带事务的写，异常回滚
+     */
+    @Test(expected = RuntimeException.class)
+    public void saveWithTransaction() {
+        User user = new User("damon", "saveWithTransaction");
+        userService.saveWithTransaction(user);
+    }
+
+    /**
+     * 这个方法事务不起作用，不会滚，数据插入到数据库中
+     */
+    @Test(expected = RuntimeException.class)
+    public void saveByInnerAop() {
+        User user = new User("ellen", "saveByInnerAop");
+        userService.saveByInnerAop(user);
+    }
+
+    /**
+     * 这个例子中，数据会正常回滚
+     */
+    @Test(expected = RuntimeException.class)
+    public void saveByInnerAopWithSelfIoC() {
+        User user = new User("fork", "saveByInnerAopWithSelfIoC");
+        userService.saveByInnerAopWithSelfIoC(user);
+    }
+
+    @Test
+    public void saveByInnerClass() throws Exception {
+        User user = new User("google", "saveByInnerClass");
+        userService.saveByInnerClass(user);
+    }
+
+    @Test
+    public void saveByInnerClassWithSelfIoC() throws Exception {
+        User user = new User("hello", "saveByInnerClassWithSelfIoC");
+        userService.saveByInnerClassWithSelfIoC(user);
     }
 }

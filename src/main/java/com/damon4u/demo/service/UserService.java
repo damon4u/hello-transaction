@@ -2,6 +2,8 @@ package com.damon4u.demo.service;
 
 import com.damon4u.demo.domain.User;
 
+import java.util.concurrent.ExecutionException;
+
 /**
  * Description:
  *
@@ -16,5 +18,21 @@ public interface UserService {
 
     User getUserById(Long id);
 
-    void readAndWrite(User user);
+    void readAndWriteDefaultDataSource(User user);
+
+    void readAndWriteWithSelfIoC(User user);
+
+    void saveWithTransaction(User user);
+
+    void saveByInnerAop(User user);
+
+    void saveByInnerAopWithSelfIoC(User user);
+
+    void saveByInnerClass(User user) throws ExecutionException, InterruptedException;
+
+    void saveByInnerClassWithSelfIoC(User user) throws ExecutionException, InterruptedException;
+
+    void readAndWriteWithTransaction(User user);
+
+    void readAndWriteWithTransactionUseMaster(User user);
 }
